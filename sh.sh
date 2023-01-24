@@ -1,11 +1,11 @@
 #!/bin/bash
 
-while getopts nat:cat: option
+while getopts n:c: option
 do 
     case "${option}"
         in
-        nat)nation=${OPTARG};;
-        cat)code=${OPTARG};;
+        n)nation=${OPTARG};;
+        c)code=${OPTARG};;
     esac
 done
 
