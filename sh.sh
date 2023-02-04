@@ -1,4 +1,5 @@
 #!/bin/bash
+file=/home/log/arch.tar.gz
 Help()
 {
    echo "Backup your log files and pack it to tarball."
@@ -28,4 +29,34 @@ do
     esac
 done
 
+if test - "arch.tar.gz"
+then
+  gzip -d arch.tar.gz
+  tar uvf /home/logs/arch.tar $(find $logpath -mmin +720) --remove-files
+  gzip -9 arch.tar
+else
+  tar -crvzf /home/logs/arch.tar.gz $(find $logpath -mmin +720) --remove-files
+fi
+
 tar -cvf $bkpdir/logs-$(date +%Y-%m-%d).tar $(find $logpath -mmin + $t)
+
+##############################
+##############################
+##############################
+
+#!/bin/bash
+logs=$(ls /home/logs/*.log)
+file=/home/log/arch.tar.gz
+dat=$(date +%Y-%m-%d)
+if test -f "$logs"
+then
+  echo $dat [NOTHING TO ARCHIVE] >> /home/logs/backup.log
+if test -f "$file"
+then
+  echo $dat [BACKUP STARTED] >> /home/logs/backup.log 2> /dev/null
+  gzip -d arch.tar.gz
+  tar uvf /home/logs/arch.tar $(find $logpath -mmin +720) --remove-files >> /home/logs/backup.log 2>> /home/logs/backup.log
+  gzip -9 arch.tar
+else
+  tar -cvzf /home/logs/arch.tar.gz $(find $logpath -mmin +720) --remove-files >> /home/logs/backup.log 2>> /home/logs/backup.log
+fi
